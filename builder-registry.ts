@@ -33,10 +33,23 @@ Builder.registerComponent(
   dynamic(() => import("./components/ProductSlider/ProductSlider")),
   {
     name: "ProductSlider",
+    childRequirements: {
+      message: 'You can only put a ProductSliderItem',
+      query: {
+        'component.name': { $in: ['ProductSliderItem'] },
+      },
+    }
+  }
+);
+
+Builder.registerComponent(
+  dynamic(() => import("./components/ProductSlider/ProductSliderItem")),
+  {
+    name: "ProductSliderItem",
     inputs: [
       {
-        name: "urlKeys",
-        type: "list",
+        name: "urlKey",
+        type: "string",
       },
     ],
   }
