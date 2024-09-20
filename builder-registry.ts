@@ -28,3 +28,16 @@ Builder.registerComponent(
     ],
   }
 );
+
+Builder.registerComponent(
+  dynamic(() => import("./components/ProductSlider/ProductSlider")),
+  {
+    name: "ProductSlider",
+    inputs: [
+      {
+        name: "urlKeys",
+        type: "list",
+      },
+    ],
+  }
+);

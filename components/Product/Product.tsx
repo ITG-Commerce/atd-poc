@@ -1,4 +1,3 @@
-"use client";
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -15,7 +14,7 @@ export interface Product {
 }
 
 function Product({ urlKey }: ProductProps) {
-const [product, setProduct] = useState<Product | null>(null);
+  const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -50,6 +49,8 @@ const [product, setProduct] = useState<Product | null>(null);
   return (
     <div>
       <h1>{product.name}</h1>
+        
+
         <Image
             src={`${process.env.NEXT_PUBLIC_MAGENTO_ENDPOINT}/pub/media/catalog/product${product.media_gallery_entries[0].file}`}
             alt={product.name}
