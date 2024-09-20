@@ -7,7 +7,7 @@ export interface Product {
     }[];
 }
 
-export function useProducts(urlKeys: string[]) {
+export function useProducts(urlKeys: string | string[]) {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -28,7 +28,7 @@ export function useProducts(urlKeys: string[]) {
         };
 
         const fetchProducts = async () => {
-            const productPromises = urlKeys.map(fetchProduct);
+            const productPromises = (typeof urlKeys === 'string' ? [urlKeys] : urlKeys).map(fetchProduct);
             try {
                 const products = await Promise.all(productPromises);
                 setProducts(products);
