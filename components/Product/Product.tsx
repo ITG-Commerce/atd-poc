@@ -9,7 +9,7 @@ export interface Product {
 }
 
 function Product({ urlKey }: ProductProps) {
-    const [product, setProduct] = useState<Product | null>(null);
+const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
