@@ -66,7 +66,7 @@ export default function ProductSliderBasic(props: ProductSliderBasicProps) {
 
   return (
     <SfScrollable
-      className="m-auto py-4 items-center w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+      className="m-auto py-4 flex items-center gap-4 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
       buttons-placement="floating"
       drag
       slotPreviousButton={<ButtonPrev />}

@@ -18,7 +18,7 @@ const ProductSliderItem: React.FC<ProductSliderItemProps> = (props: ProductSlide
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>{error}</p>;
-    if (!products.length) return "No product found";
+    if (!products.length) return "No product nfound";
 
     const { name, media_gallery_entries } = products[0];
 
@@ -44,7 +44,7 @@ const ProductSliderItem: React.FC<ProductSliderItemProps> = (props: ProductSlide
                 </SfButton>
             </div>
             <div className="p-2 border-t border-neutral-200 typography-text-sm">
-                <SfLink href="#" variant="secondary" className="no-underline">
+                <SfLink href="#" variant="secondary" className="no-underline block truncate">
                     {name}
                 </SfLink>
             </div>
