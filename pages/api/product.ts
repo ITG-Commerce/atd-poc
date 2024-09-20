@@ -2,26 +2,15 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 export async function getProductByUrlKey(urlKey: string) {
     // Replace this URL with your actual product API endpoint
-    const apiEndpoint = `https://staging.magento2-d55b3.reward-cloud.io/rest/default/V1/products`;
+    const apiEndpoint = `${process.env.NEXT_PUBLIC_MAGENTO_ENDPOINT}/rest/default/V1/products?searchCriteria[filterGroups][0][filters][0][field]=url_key&searchCriteria[filterGroups][0][filters][0][value]=${urlKey}&searchCriteria[filterGroups][0][filters][0][conditionType]=eq`;
 
     try {
         const response = await fetch(apiEndpoint, {
-            method: 'POST',
-            body: JSON.stringify({
-                searchCriteria: {
-                    filterGroups: [
-                        {
-                            filters: [
-                                {
-                                    field: 'url_key',
-                                    value: urlKey,
-                                    condition_type: 'eq'
-                                }
-                            ]
-                        }
-                    ]
-                }
-            })
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${process.env.NEXT_PUBLIC_MAGENTO_ACCESS_TOKEN}`,
+            }
         });
 
         if (!response.ok) {
@@ -29,7 +18,12 @@ export async function getProductByUrlKey(urlKey: string) {
         }
 
         const product = await response.json();
-        return product;
+
+        if (!product.items || product.items.length === 0) {
+            return null;
+        }
+        
+        return product.items[0];
     } catch (error) {
         console.error('Error fetching product data:', error);
         throw error;
