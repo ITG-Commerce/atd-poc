@@ -7,7 +7,7 @@ import {
 } from "@storefront-ui/react";
 import classNames from "classnames";
 
-function ButtonPrev({ disabled, ...attributes }: { disabled?: boolean }) {
+function ButtonPrev({ disabled = false, ...attributes }: { disabled?: boolean }) {
   return (
     <SfButton
       className={classNames(
@@ -26,9 +26,7 @@ function ButtonPrev({ disabled, ...attributes }: { disabled?: boolean }) {
   );
 }
 
-ButtonPrev.defaultProps = { disabled: false };
-
-function ButtonNext({ disabled, ...attributes }: { disabled?: boolean }) {
+function ButtonNext({ disabled = false, ...attributes }: { disabled?: boolean }) {
   return (
     <SfButton
       className={classNames(
@@ -46,8 +44,6 @@ function ButtonNext({ disabled, ...attributes }: { disabled?: boolean }) {
     </SfButton>
   );
 }
-
-ButtonNext.defaultProps = { disabled: false };
 
 interface ProductSliderProps {
   children: React.ReactNode;

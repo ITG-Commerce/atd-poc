@@ -1,3 +1,4 @@
+import { Product } from '@/components/ProductSlider/types';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export async function getProductsByUrlKey(urlKeys: string[]) {
@@ -17,13 +18,16 @@ export async function getProductsByUrlKey(urlKeys: string[]) {
             throw new Error(`Failed to fetch product data: ${response.statusText}`);
         }
 
-        const product = await response.json();
+        const data = await response.json();
 
-        if (!product.items || product.items.length === 0) {
+        if (!data.items || data.items.length === 0) {
             return [];
         }
         
-        return product.items;
+        return data.items.map((item: Product, index: number) => ({
+            ...item,
+            urlKey: urlKeys[index],
+        }));
     } catch (error) {
         console.error('Error fetching product data:', error);
         throw error;

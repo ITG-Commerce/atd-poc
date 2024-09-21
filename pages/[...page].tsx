@@ -8,12 +8,13 @@ import { GetStaticProps } from "next";
 import "../builder-registry";
 import { Product } from "@/components/ProductSlider/types";
 import { ProductSliderProvider } from "@/components/ProductSlider/ProductSliderContext";
+import { getProductsByUrlKey } from "./api/products";
 
 builder.init(process.env.NEXT_PUBLIC_BUILDER_API_KEY!);
 
 // Define a function that fetches the Builder
 // content for a given page
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps = async ({ params,  }) => {
   // Fetch the builder content for the given page
   const page = await builder
     .get("page", {
@@ -23,25 +24,19 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     })
     .toPromise();
 
-  let products = [];
+  let products: Product[] = [];
 
   try {
     const urlKeys = page.data.state.contract.data.products as string[];
-    const response = await fetch(
-      `/api/products?urlKeys=${JSON.stringify(urlKeys)}}`
-    );
-    const data = await response.json();
+    const params = new URLSearchParams();
+    urlKeys.forEach((urlKey) => {
+      params.append("urlKeys", urlKey);
+    });
 
-    console.log({data})
-    products = data.products.map((product: Product, index: number) => ({
-      ...product,
-      urlKey: urlKeys[index],
-    }));
+    products = await getProductsByUrlKey(urlKeys);
   } catch (error) {
     console.error("Error fetching products:", error);
   }
-
-  console.log("products", products);
 
   // Return the page content as props
   return {

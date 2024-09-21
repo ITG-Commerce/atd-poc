@@ -23,13 +23,9 @@ const ProductSliderItem: React.FC<ProductSliderItemProps> = (
 
   const product = products.find((product) => product.urlKey === urlKey);
 
-  console.log({ products, product, urlKey });
-
   if (!product) return null;
 
   const { name, media_gallery_entries } = product;
-
-  console.log({ props });
 
   return (
     <div className="first:ms-auto last:me-auto ring-1 ring-inset ring-neutral-200 shrink-0 rounded-md hover:shadow-lg w-[148px] lg:w-[192px]">
