@@ -1,5 +1,4 @@
-"use client";
-
+import { BuilderComponentState } from "@builder.io/react/dist/types/src/components/builder-component.component";
 import {
   SfButton,
   SfIconChevronLeft,
@@ -7,13 +6,6 @@ import {
   SfScrollable,
 } from "@storefront-ui/react";
 import classNames from "classnames";
-
-export interface Product {
-  name: string;
-  media_gallery_entries: {
-    file: string;
-  }[];
-}
 
 function ButtonPrev({ disabled, ...attributes }: { disabled?: boolean }) {
   return (
@@ -57,11 +49,12 @@ function ButtonNext({ disabled, ...attributes }: { disabled?: boolean }) {
 
 ButtonNext.defaultProps = { disabled: false };
 
-interface ProductSliderBasicProps {
+interface ProductSliderProps {
   children: React.ReactNode;
+  builderState: BuilderComponentState;
 }
 
-export default function ProductSliderBasic(props: ProductSliderBasicProps) {
+export default function ProductSlider(props: ProductSliderProps) {
   const { children } = props;
 
   return (

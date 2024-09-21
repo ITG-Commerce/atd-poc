@@ -1,13 +1,7 @@
+import { Product } from "@/components/ProductSlider/types";
 import { useEffect, useState } from "react";
 
-export interface Product {
-    name: string;
-    media_gallery_entries: {
-        file: string;
-    }[];
-}
-
-export function useProducts(urlKeys: string | string[]) {
+export function useProducts(urlKeys: string[]) {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -15,33 +9,31 @@ export function useProducts(urlKeys: string | string[]) {
     useEffect(() => {
         if (!urlKeys) return;
 
-        const fetchProduct = async (urlKey: string) => {
-
-            const response = await fetch(`/api/product?urlKey=${urlKey}`);
-            const data = await response.json();
-
-            if (response.ok) {
-                return data.product;
-            } else {
-                setError(data.error || 'Error fetching product');
-            }
-        };
-
-        const fetchProducts = async () => {
-            const productPromises = (typeof urlKeys === 'string' ? [urlKeys] : urlKeys).map(fetchProduct);
+        const fetchProducts = async (urlKeys: string[]) => {
             try {
-                const products = await Promise.all(productPromises);
-                setProducts(products);
+                const response = await fetch(`/api/products?urlKeys=${urlKeys.join(',')}`);
+                const data = await response.json();
 
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                if (response.ok) {
+                    setProducts(data.products.map((product: Product, index: number) => ({
+                        ...product,
+                        urlKey: urlKeys[index],
+                    }))
+                    );
+                } else {
+                    setProducts([]);
+                    setError(data?.error);
+                }
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
             } catch (error: unknown) {
                 setError('Error fetching products');
             } finally {
                 setLoading(false);
             }
+
         };
 
-        fetchProducts();
+        fetchProducts(urlKeys);
     }, [urlKeys]);
 
     return { products, loading, error };

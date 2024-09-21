@@ -6,6 +6,8 @@ import Head from "next/head";
 import { BuilderContent } from "@builder.io/sdk";
 import { GetStaticProps } from "next";
 import "../builder-registry";
+import { Product } from "@/components/ProductSlider/types";
+import { ProductSliderProvider } from "@/components/ProductSlider/ProductSliderContext";
 
 builder.init(process.env.NEXT_PUBLIC_BUILDER_API_KEY!);
 
@@ -21,10 +23,29 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     })
     .toPromise();
 
+  let products = [];
+
+  try {
+    const urlKeys = page.data.state.contract.data.products as string[];
+    const response = await fetch(
+      `/api/products?urlKeys=${JSON.stringify(urlKeys)}}`
+    );
+    const data = await response.json();
+    products = data.products.map((product: Product, index: number) => ({
+      ...product,
+      urlKey: urlKeys[index],
+    }));
+  } catch (error) {
+    console.error("Error fetching products:", error);
+  }
+
+  console.log("products", products);
+
   // Return the page content as props
   return {
     props: {
       page: page || null,
+      products,
     },
     // Revalidate the content every 5 seconds
     revalidate: 5,
@@ -51,7 +72,13 @@ export async function getStaticPaths() {
 }
 
 // Define the Page component
-export default function Page({ page }: { page: BuilderContent | null }) {
+export default function Page({
+  page,
+  products,
+}: {
+  page: BuilderContent | null;
+  products: Product[];
+}) {
   // const router = useRouter();
   const isPreviewing = useIsPreviewing();
 
@@ -64,12 +91,12 @@ export default function Page({ page }: { page: BuilderContent | null }) {
   // If the page content is available, render
   // the BuilderComponent with the page content
   return (
-    <>
+    <ProductSliderProvider products={products} loading={false}>
       <Head>
         <title>{page?.data?.title}</title>
       </Head>
       {/* Render the Builder page */}
       <BuilderComponent model="page" content={page || undefined} />
-    </>
+    </ProductSliderProvider>
   );
 }
