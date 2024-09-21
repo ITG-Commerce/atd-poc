@@ -31,6 +31,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       `/api/products?urlKeys=${JSON.stringify(urlKeys)}}`
     );
     const data = await response.json();
+
+    console.log({data})
     products = data.products.map((product: Product, index: number) => ({
       ...product,
       urlKey: urlKeys[index],

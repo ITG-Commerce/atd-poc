@@ -11,6 +11,4 @@ const nextConfig = BuilderDevTools()(
   })
 );
 
-console.log('nextConfig', JSON.stringify(nextConfig, null, 2));
-
 export default nextConfig;

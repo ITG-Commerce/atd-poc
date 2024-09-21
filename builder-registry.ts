@@ -18,19 +18,6 @@ Builder.registerComponent(
 );
 
 Builder.registerComponent(
-  dynamic(() => import("./components/Product/Product")),
-  {
-    name: "Product",
-    inputs: [
-      {
-        name: "urlKey",
-        type: "string",
-      },
-    ],
-  }
-);
-
-Builder.registerComponent(
   withChildren(ProductSlider),
   {
     name: "ProductSlider",
