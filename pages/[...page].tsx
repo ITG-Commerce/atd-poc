@@ -94,7 +94,30 @@ export default function Page({
       </Head>
       {/* Render the Builder page */}
       <BuilderComponent model="page" content={page || undefined} data={{
-        myName: "John Doe",
+        me: {
+          name: "John Doe",
+          email: " [email protected]",
+          cart: {
+            items: [
+              {
+                product: {
+                  name: "Product 1",
+                  price: 100,
+                  image: "https://via.placeholder.com/150",
+                },
+                quantity: 1,
+              },
+              {
+                product: {
+                  name: "Product 2",
+                  price: 200,
+                  image: "https://via.placeholder.com/150",
+                },
+                quantity: 2,
+              },
+            ],
+          },
+        },
       }} />
     </ProductSliderProvider>
   );
