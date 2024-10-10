@@ -24,7 +24,7 @@ export const getStaticProps: GetStaticProps = async ({ params,  }) => {
     })
     .toPromise();
 
-  const contract = page.data.contract.value;
+  const contract = page.data.contract?.value;
   let products: Product[] = [];
 
   try {
