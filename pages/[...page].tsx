@@ -105,7 +105,8 @@ export default function Page({
       </Head>
       {/* Render the Builder page */}
       <BuilderComponent model="page" content={page || undefined}  data={{
-        contract
+        contract,
+        kecske: "star"
       }} />
     </ProductSliderProvider>
   );
