@@ -24,10 +24,11 @@ export const getStaticProps: GetStaticProps = async ({ params,  }) => {
     })
     .toPromise();
 
+  const contract = page.data.contract.value;
   let products: Product[] = [];
 
   try {
-    const urlKeys = page.data.state.contract.data.products as string[];
+    const urlKeys = contract.data.products as string[];
     const params = new URLSearchParams();
     urlKeys.forEach((urlKey) => {
       params.append("urlKeys", urlKey);
@@ -38,13 +39,13 @@ export const getStaticProps: GetStaticProps = async ({ params,  }) => {
     console.error("Error fetching products:", error);
   }
 
-  const contract = await builder
-    .get("contract-type", {
-      userAttributes: {
-        name: "Contact Three",
-      },
-    })
-    .toPromise();
+  // const contract = await builder
+  //   .get("contract-type", {
+  //     userAttributes: {
+  //       name: "Contact Three",
+  //     },
+  //   })
+  //   .toPromise();
 
   // Return the page content as props
   return {
