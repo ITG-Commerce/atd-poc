@@ -93,7 +93,9 @@ export default function Page({
         <title>{page?.data?.title}</title>
       </Head>
       {/* Render the Builder page */}
-      <BuilderComponent model="page" content={page || undefined} />
+      <BuilderComponent model="page" content={page || undefined} data={{
+        myName: "John Doe",
+      }} />
     </ProductSliderProvider>
   );
 }
