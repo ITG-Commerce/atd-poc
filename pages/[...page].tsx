@@ -38,11 +38,20 @@ export const getStaticProps: GetStaticProps = async ({ params,  }) => {
     console.error("Error fetching products:", error);
   }
 
+  const contract = await builder
+    .get("contract-type", {
+      userAttributes: {
+        name: "Contact Three",
+      },
+    })
+    .toPromise();
+
   // Return the page content as props
   return {
     props: {
       page: page || null,
       products,
+      contract
     },
     // Revalidate the content every 5 seconds
     revalidate: 5,
@@ -72,9 +81,11 @@ export async function getStaticPaths() {
 export default function Page({
   page,
   products,
+  contract
 }: {
   page: BuilderContent | null;
   products: Product[];
+  contract: unknown;
 }) {
   // const router = useRouter();
   const isPreviewing = useIsPreviewing();
@@ -93,31 +104,8 @@ export default function Page({
         <title>{page?.data?.title}</title>
       </Head>
       {/* Render the Builder page */}
-      <BuilderComponent model="page" content={page || undefined} data={{
-        me: {
-          name: "John Doe",
-          email: " [email protected]",
-          cart: {
-            items: [
-              {
-                product: {
-                  name: "Product 1",
-                  price: 100,
-                  image: "https://via.placeholder.com/150",
-                },
-                quantity: 1,
-              },
-              {
-                product: {
-                  name: "Product 2",
-                  price: 200,
-                  image: "https://via.placeholder.com/150",
-                },
-                quantity: 2,
-              },
-            ],
-          },
-        },
+      <BuilderComponent model="page" content={page || undefined}  data={{
+        contract
       }} />
     </ProductSliderProvider>
   );
