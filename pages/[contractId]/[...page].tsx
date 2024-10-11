@@ -26,9 +26,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   const contract = await builder
     .get("contract-type", {
-      userAttributes: {
-        id: contractId,
-      },
+      query: {
+        'data.id': contractId
+      }
     })
     .toPromise();
 
