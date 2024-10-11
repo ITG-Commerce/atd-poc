@@ -83,7 +83,7 @@ export default function Page({
       </Head>
       {/* Render the Builder page */}
       <BuilderComponent
-        model="page"
+        model="page-with-contract"
         content={page || undefined}
         data={{
           contract,
