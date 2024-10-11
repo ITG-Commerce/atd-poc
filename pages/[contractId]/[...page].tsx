@@ -101,7 +101,9 @@ export default function Page({
         model="page-with-contract"
         content={page || undefined}
         data={{
-          contract,
+          app: {
+            contract
+          }
         }}
       />
     </>
