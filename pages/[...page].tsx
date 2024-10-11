@@ -5,12 +5,9 @@ import DefaultErrorPage from "next/error";
 import Head from "next/head";
 import { BuilderContent } from "@builder.io/sdk";
 import { GetStaticProps } from "next";
-import "../builder-registry";
 import { Product } from "@/components/ProductSlider/types";
 import { ProductSliderProvider } from "@/components/ProductSlider/ProductSliderContext";
 import { getProductsByUrlKey } from "./api/products";
-
-builder.init(process.env.NEXT_PUBLIC_BUILDER_API_KEY!);
 
 // Define a function that fetches the Builder
 // content for a given page

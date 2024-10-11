@@ -6,8 +6,6 @@ import Head from "next/head";
 import { BuilderContent } from "@builder.io/sdk";
 import { GetStaticProps } from "next";
 
-builder.init(process.env.NEXT_PUBLIC_BUILDER_API_KEY!);
-
 // Define a function that fetches the Builder
 // content for a given page
 export const getStaticProps: GetStaticProps = async ({ params }) => {
