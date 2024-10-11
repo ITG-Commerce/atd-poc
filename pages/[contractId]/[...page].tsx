@@ -16,13 +16,14 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   // Fetch the builder content for the given page
 
   const page = await builder.get("page-with-contract", {
-    // We only need the URL field
     query: {
-      slug: {
-        "&eq": pageSlug,
+      data: {
+        slug: "dashboard"
       }
-    }
-  });
+    },  
+  }).toPromise();
+
+  console.log({page})
 
   const contract = await builder
     .get("contract-type", {
@@ -37,6 +38,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       page: page || null,
       contract: contract?.data || null,
+      slug: pageSlug
     },
     // Revalidate the content every 5 seconds
     revalidate: 5,
