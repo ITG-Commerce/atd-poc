@@ -20,10 +20,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       data: {
         slug: "dashboard"
       }
-    },  
+    }, 
+    options: { noTargeting: true },
   }).toPromise();
-
-  console.log({page})
 
   const contract = await builder
     .get("contract-type", {
