@@ -17,9 +17,11 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   const page = await builder.get("page-with-contract", {
     // We only need the URL field
-    userAttributes: {
-      slug: pageSlug,
-    },
+    query: {
+      slug: {
+        "&eq": pageSlug,
+      }
+    }
   });
 
   const contract = await builder
