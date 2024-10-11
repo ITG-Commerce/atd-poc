@@ -58,7 +58,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       page: page || null,
       products,
-      contract: contract || null,
+      contract: contract?.data || null,
     },
     // Revalidate the content every 5 seconds
     revalidate: 5,
