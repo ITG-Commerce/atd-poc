@@ -18,7 +18,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const page = await builder.get("page-with-contract", {
     query: {
       data: {
-        slug: "dashboard"
+        slug: pageSlug
       }
     }, 
     options: { noTargeting: true },
