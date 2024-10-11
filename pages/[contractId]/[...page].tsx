@@ -20,7 +20,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     userAttributes: {
       slug: pageSlug,
     },
-    options: { noTargeting: true },
   });
 
   const contract = await builder
