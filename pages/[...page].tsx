@@ -52,7 +52,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       page: page || null,
       products,
-      contract: contract || null,
+      contract: contract?.data || null,
     },
     // Revalidate the content every 5 seconds
     revalidate: 5,
@@ -107,7 +107,6 @@ export default function Page({
       {/* Render the Builder page */}
       <BuilderComponent model="page" content={page || undefined}  data={{
         contract,
-        kecske: "star"
       }} />
     </ProductSliderProvider>
   );
