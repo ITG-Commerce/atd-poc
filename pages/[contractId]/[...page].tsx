@@ -25,10 +25,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
     const page = await builder.get("page-with-contract", {
       // We only need the URL field
-      options: { noTargeting: true },
       userAttributes: {
         slug: pageSlug,
-      }
+      },
+      options: { noTargeting: true },
     });
 
   const contract = await builder
