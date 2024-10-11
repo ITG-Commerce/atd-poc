@@ -112,6 +112,10 @@ export default function Page({
     return <DefaultErrorPage statusCode={404} />;
   }
 
+  console.log("page", page);
+  console.log("contract", contract);
+  console.log("products", products);
+
   // If the page content is available, render
   // the BuilderComponent with the page content
   return (
