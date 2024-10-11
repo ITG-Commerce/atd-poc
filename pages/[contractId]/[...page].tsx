@@ -5,26 +5,40 @@ import DefaultErrorPage from "next/error";
 import Head from "next/head";
 import { BuilderContent } from "@builder.io/sdk";
 import { GetStaticProps } from "next";
-import "../builder-registry";
+import "../../builder-registry";
 import { Product } from "@/components/ProductSlider/types";
 import { ProductSliderProvider } from "@/components/ProductSlider/ProductSliderContext";
-import { getProductsByUrlKey } from "./api/products";
+import { getProductsByUrlKey } from "../api/products";
 
 builder.init(process.env.NEXT_PUBLIC_BUILDER_API_KEY!);
 
 // Define a function that fetches the Builder
 // content for a given page
 export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const contractId = params?.contractId as string;
+  const pageSlug = (params?.page as string[]).pop();
   // Fetch the builder content for the given page
-  const page = await builder
-    .get("page", {
+
+  console.log("contractId", contractId);
+  console.log("pageSlug", pageSlug);
+
+
+    const page = await builder.get("page-with-contract", {
+      // We only need the URL field
+      options: { noTargeting: true },
       userAttributes: {
-        urlPath: "/" + ((params?.page as string[])?.join("/") || ""),
+        slug: pageSlug,
+      }
+    });
+
+  const contract = await builder
+    .get("contract-type", {
+      userAttributes: {
+        id: contractId,
       },
     })
     .toPromise();
-
-  const contract = page.data.contract?.value;
+    
   let products: Product[] = [];
 
   try {
@@ -38,14 +52,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   } catch (error) {
     console.error("Error fetching products:", error);
   }
-
-  // const contract = await builder
-  //   .get("contract-type", {
-  //     userAttributes: {
-  //       name: "Contact Three",
-  //     },
-  //   })
-  //   .toPromise();
 
   // Return the page content as props
   return {
@@ -62,18 +68,27 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 // Define a function that generates the
 // static paths for all pages in Builder
 export async function getStaticPaths() {
-  // Get a list of all pages in Builder
-  const pages = await builder.getAll("page", {
-    // We only need the URL field
-    fields: "data.url",
+  const contracts = await builder.getAll("contract-type", {
+    fields: "data.id",
     options: { noTargeting: true },
   });
 
+  // Get a list of all pages in Builder
+  const pages = await builder.getAll("page-with-contract", {
+    // We only need the URL field
+    fields: "data.slug",
+    options: { noTargeting: true },
+  });
+
+  const paths = contracts
+    .map((contract) =>
+      pages.map((page) => `/${contract.data?.id}/${page.data?.slug}`)
+    )
+    .flat();
+
   // Generate the static paths for all pages in Builder
   return {
-    paths: pages
-      .map((page) => String(page.data?.url))
-      .filter((url) => url !== "/"),
+    paths,
     fallback: "blocking",
   };
 }
@@ -82,7 +97,7 @@ export async function getStaticPaths() {
 export default function Page({
   page,
   products,
-  contract
+  contract,
 }: {
   page: BuilderContent | null;
   products: Product[];
@@ -105,10 +120,13 @@ export default function Page({
         <title>{page?.data?.title}</title>
       </Head>
       {/* Render the Builder page */}
-      <BuilderComponent model="page" content={page || undefined}  data={{
-        contract,
-        kecske: "star"
-      }} />
+      <BuilderComponent
+        model="page"
+        content={page || undefined}
+        data={{
+          contract,
+        }}
+      />
     </ProductSliderProvider>
   );
 }
