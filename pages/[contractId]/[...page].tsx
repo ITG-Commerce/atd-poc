@@ -5,10 +5,6 @@ import DefaultErrorPage from "next/error";
 import Head from "next/head";
 import { BuilderContent } from "@builder.io/sdk";
 import { GetStaticProps } from "next";
-import "../../builder-registry";
-import { Product } from "@/components/ProductSlider/types";
-import { ProductSliderProvider } from "@/components/ProductSlider/ProductSliderContext";
-import { getProductsByUrlKey } from "../api/products";
 
 builder.init(process.env.NEXT_PUBLIC_BUILDER_API_KEY!);
 
@@ -34,26 +30,11 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       },
     })
     .toPromise();
-    
-  let products: Product[] = [];
-
-  try {
-    const urlKeys = contract.data.products as string[];
-    const params = new URLSearchParams();
-    urlKeys.forEach((urlKey) => {
-      params.append("urlKeys", urlKey);
-    });
-
-    products = await getProductsByUrlKey(urlKeys);
-  } catch (error) {
-    console.error("Error fetching products:", error);
-  }
 
   // Return the page content as props
   return {
     props: {
       page: page || null,
-      products,
       contract: contract?.data || null,
     },
     // Revalidate the content every 5 seconds
@@ -92,11 +73,9 @@ export async function getStaticPaths() {
 // Define the Page component
 export default function Page({
   page,
-  products,
   contract,
 }: {
   page: BuilderContent | null;
-  products: Product[];
   contract: unknown;
 }) {
   // const router = useRouter();
@@ -108,14 +87,10 @@ export default function Page({
     return <DefaultErrorPage statusCode={404} />;
   }
 
-  console.log("page", page);
-  console.log("contract", contract);
-  console.log("products", products);
-
   // If the page content is available, render
   // the BuilderComponent with the page content
   return (
-    <ProductSliderProvider products={products} loading={false}>
+    <>
       <Head>
         <title>{page?.data?.title}</title>
       </Head>
@@ -127,6 +102,6 @@ export default function Page({
           contract,
         }}
       />
-    </ProductSliderProvider>
+    </>
   );
 }
