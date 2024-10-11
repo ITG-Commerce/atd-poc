@@ -6,20 +6,23 @@ import Head from "next/head";
 import { BuilderContent } from "@builder.io/sdk";
 import { GetStaticProps } from "next";
 
+builder.init(process.env.NEXT_PUBLIC_BUILDER_API_KEY!);
+
 // Define a function that fetches the Builder
 // content for a given page
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const contractId = params?.contractId as string;
+  const pageSlug = (params?.page as string[]).pop();
   // Fetch the builder content for the given page
 
-  const page = await builder
-    .get("page-with-contract", {
-      userAttributes: {
-        contract: contractId,
-        urlPath: `/${contractId}/tutorials`,
-      },
-    })
-    .toPromise();
+  const page = await builder.get("page-with-contract", {
+    query: {
+      data: {
+        slug: "dashboard"
+      }
+    }, 
+    options: { noTargeting: true },
+  }).toPromise();
 
   const contract = await builder
     .get("contract-type", {
@@ -34,6 +37,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       page: page || null,
       contract: contract?.data || null,
+      slug: pageSlug
     },
     // Revalidate the content every 5 seconds
     revalidate: 5,
@@ -48,7 +52,18 @@ export async function getStaticPaths() {
     options: { noTargeting: true },
   });
 
-  const paths = contracts.map((contract) => `/${contract.data?.id}/tutorials`);
+  // Get a list of all pages in Builder
+  const pages = await builder.getAll("page-with-contract", {
+    // We only need the URL field
+    fields: "data.slug",
+    options: { noTargeting: true },
+  });
+
+  const paths = contracts
+    .map((contract) =>
+      pages.map((page) => `/${contract.data?.id}/${page.data?.slug}`)
+    )
+    .flat();
 
   // Generate the static paths for all pages in Builder
   return {
