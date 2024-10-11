@@ -19,17 +19,13 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const pageSlug = (params?.page as string[]).pop();
   // Fetch the builder content for the given page
 
-  console.log("contractId", contractId);
-  console.log("pageSlug", pageSlug);
-
-
-    const page = await builder.get("page-with-contract", {
-      // We only need the URL field
-      userAttributes: {
-        slug: pageSlug,
-      },
-      options: { noTargeting: true },
-    });
+  const page = await builder.get("page-with-contract", {
+    // We only need the URL field
+    userAttributes: {
+      slug: pageSlug,
+    },
+    options: { noTargeting: true },
+  });
 
   const contract = await builder
     .get("contract-type", {
